@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Sua Rotina — com carinho 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #e8266a;
+    --pink2: #ff5e95;
+    --pink-glow: #e8266a22;
+    --black: #0a0a0a;
+    --card: #141414;
+    --card2: #1c1c1c;
+    --border: #242424;
+    --text: #e8e8e8;
+    --muted: #666;
+    --soft: #999;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:smooth; }
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    padding-bottom: 76px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top:0; left:0; right:0; z-index:99;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #1e1e1e;
+    height: 54px;
+    display: flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .topbar-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-weight: 600;
+    color: #fff; letter-spacing: 1px;
+  }
+  .topbar-logo span { color: var(--pink); font-style: italic; }
+  .day-badge {
+    font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase;
+    background: var(--pink-glow); color: var(--pink2);
+    border: 1px solid #e8266a40;
+    padding: 3px 10px; border-radius: 100px;
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed; bottom:0; left:0; right:0; z-index:99;
+    background: rgba(10,10,10,0.97);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid #1e1e1e;
+    height: 68px;
+    display: flex; align-items:center;
+  }
+  .bnav-btn {
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    background:none; border:none; cursor:pointer; padding:10px 4px;
+    transition: all 0.2s;
+  }
+  .bnav-icon { font-size: 1.25rem; line-height:1; }
+  .bnav-label {
+    font-size: 0.6rem; letter-spacing: 0.8px; text-transform:uppercase;
+    color: var(--muted); transition: color 0.2s; font-family:'DM Sans',sans-serif;
+  }
+  .bnav-btn.active .bnav-label { color: var(--pink2); }
+  .bnav-dot {
+    width:4px; height:4px; border-radius:50%;
+    background: var(--pink); margin-top: 2px;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .bnav-btn.active .bnav-dot { opacity:1; }
+
+  /* ── PAGES ── */
+  .page { display:none; padding: 66px 0 20px; animation: fadeIn 0.3s ease; }
+  .page.active { display:block; }
+  .px { padding-left:18px; padding-right:18px; }
+
+  /* ── HERO ── */
+  .hero { padding: 28px 18px 24px; }
+  .nutri-tag {
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:0.72rem; color: var(--soft); letter-spacing:0.5px;
+    margin-bottom: 14px;
+  }
+  .nutri-dot { width:6px; height:6px; border-radius:50%; background:var(--pink); }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.6rem; font-weight:600; line-height:1.1;
+    color: #fff; margin-bottom: 10px;
+  }
+  .hero h1 em { color: var(--pink2); font-style:italic; }
+  .hero-msg {
+    font-size: 0.88rem; color: var(--soft); line-height:1.7;
+    border-left: 2px solid var(--pink);
+    padding-left: 14px; margin-top:16px;
+    font-style: italic;
+  }
+
+  /* ── TODAY BANNER ── */
+  .today-banner {
+    margin: 0 18px 20px;
+    background: linear-gradient(135deg, #e8266a15 0%, #1c1c1c 60%);
+    border: 1px solid #e8266a30;
+    border-radius: 18px; padding: 16px 18px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .today-icon { font-size:1.8rem; flex-shrink:0; }
+  .today-label { font-size:0.65rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--pink2); margin-bottom:2px; }
+  .today-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:#fff; }
+  .today-sub { font-size:0.78rem; color:var(--muted); margin-top:1px; }
+
+  /* ── SECTION HEADER ── */
+  .sec-head { padding: 8px 18px 14px; }
+  .sec-eyebrow { font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; color:var(--pink); margin-bottom:4px; }
+  .sec-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:#fff; line-height:1.1; }
+
+  /* ── DAY TABS ── */
+  .day-scroller {
+    display:flex; gap:8px; overflow-x:auto; padding: 0 18px 16px;
+    scrollbar-width:none;
+  }
+  .day-scroller::-webkit-scrollbar { display:none; }
+  .day-pill {
+    flex-shrink:0; padding:8px 18px; border-radius:100px;
+    border:1px solid var(--border); background:transparent;
+    color:var(--muted); font-family:'DM Sans',sans-serif;
+    font-size:0.8rem; cursor:pointer; transition:all 0.2s;
+    position:relative;
+  }
+  .day-pill.today-pill { border-color:#e8266a50; color:var(--pink2); }
+  .day-pill.active { background:var(--pink); border-color:var(--pink); color:#fff; }
+  .today-marker {
+    position:absolute; top:-3px; right:-3px;
+    width:8px; height:8px; border-radius:50%;
+    background:var(--pink2); border:2px solid var(--black);
+  }
+
+  /* ── MEAL CARDS ── */
+  .meals-wrap { padding: 0 18px; display:flex; flex-direction:column; gap:10px; }
+  .day-meals { display:none; flex-direction:column; gap:10px; }
+  .day-meals.active { display:flex; }
+
+  .meal-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:18px; overflow:hidden;
+  }
+  .meal-card-head {
+    display:flex; align-items:center; gap:12px;
+    padding:13px 16px 10px;
+  }
+  .meal-time-badge {
+    font-size:0.65rem; letter-spacing:1px; text-transform:uppercase;
+    color:var(--pink2); background:var(--pink-glow);
+    border:1px solid #e8266a30; padding:3px 9px; border-radius:100px;
+    white-space:nowrap; flex-shrink:0;
+  }
+  .meal-name-head {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.05rem; font-weight:600; color:#fff;
+  }
+  .meal-body { padding:0 16px 13px; }
+  .meal-item {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:7px 0; border-top:1px solid #1e1e1e;
+    font-size:0.82rem; color:var(--soft); line-height:1.5;
+  }
+  .meal-bullet { color:var(--pink); font-size:0.6rem; margin-top:5px; flex-shrink:0; }
+  .meal-note {
+    margin:8px 16px 12px;
+    background:#e8266a0d; border-left:2px solid var(--pink);
+    border-radius:0 10px 10px 0; padding:8px 12px;
+    font-size:0.78rem; color:var(--pink2); font-style:italic; line-height:1.5;
+  }
+
+  /* ── NUTRI TIP ── */
+  .nutri-tip {
+    margin:4px 18px 0;
+    background:var(--card2); border:1px solid var(--border);
+    border-radius:14px; padding:14px 16px;
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  .tip-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
+  .tip-text { font-size:0.8rem; color:var(--soft); line-height:1.6; font-style:italic; }
+
+  /* ── TREINO ── */
+  .treino-wrap { padding:0 18px; display:flex; flex-direction:column; gap:10px; }
+  .treino-card {
+    background:var(--card); border:1px solid var(--border); border-radius:18px; overflow:hidden;
+  }
+  .treino-head {
+    padding:14px 16px 12px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .treino-day { font-size:0.62rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--pink); margin-bottom:2px; }
+  .treino-title { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:#fff; }
+  .treino-tag {
+    font-size:0.62rem; letter-spacing:0.5px; text-transform:uppercase;
+    padding:4px 10px; border-radius:100px; border:1px solid;
+  }
+  .tag-gym { color:#e8a0bc; border-color:#e8a0bc40; background:#e8266a0d; }
+  .tag-home { color:#a0c4e8; border-color:#a0c4e840; background:#266ae80d; }
+  .tag-rest { color:#a0e8b0; border-color:#a0e8b040; background:#26e84a0d; }
+  .exercise-list { list-style:none; }
+  .exercise-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:9px 16px; border-bottom:1px solid #181818; font-size:0.82rem;
+  }
+  .exercise-item:last-child { border-bottom:none; }
+  .ex-name { color:#ccc; }
+  .ex-sets {
+    font-size:0.72rem; color:var(--pink2);
+    background:var(--pink-glow); padding:3px 9px; border-radius:100px;
+    white-space:nowrap; flex-shrink:0; margin-left:8px;
+  }
+  .treino-msg {
+    padding:10px 16px 14px;
+    font-size:0.8rem; color:var(--muted); font-style:italic; line-height:1.5;
+    border-top:1px solid #181818;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline-wrap { padding:0 18px; }
+  .tl-section-label {
+    font-size:0.62rem; letter-spacing:2px; text-transform:uppercase;
+    color:#333; margin: 20px 0 14px; display:flex; align-items:center; gap:10px;
+  }
+  .tl-section-label::after { content:''; flex:1; height:1px; background:#1e1e1e; }
+  .timeline { position:relative; padding-left:20px; }
+  .timeline::before {
+    content:''; position:absolute; left:5px; top:8px; bottom:8px;
+    width:1px; background:linear-gradient(to bottom, var(--pink) 0%, transparent 100%);
+  }
+  .tl-item { position:relative; margin-bottom:18px; }
+  .tl-dot {
+    position:absolute; left:-20px; top:4px;
+    width:10px; height:10px; border-radius:50%;
+    background:var(--black); border:2px solid var(--pink);
+    transition:all 0.2s;
+  }
+  .tl-dot.now { background:var(--pink); box-shadow:0 0 8px var(--pink); }
+  .tl-time { font-size:0.65rem; letter-spacing:1.5px; color:var(--pink2); text-transform:uppercase; margin-bottom:1px; }
+  .tl-label { font-size:0.92rem; color:#ddd; }
+  .tl-detail { font-size:0.78rem; color:var(--muted); margin-top:2px; line-height:1.4; }
+
+  .horario-card {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:14px 16px; margin-bottom:10px;
+  }
+  .hc-label { font-size:0.62rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--pink); margin-bottom:4px; }
+  .hc-val { font-size:0.88rem; color:#bbb; line-height:1.6; }
+  .hc-val strong { color:#fff; }
+
+  /* ── SAÚDE ── */
+  .saude-wrap { padding:0 18px; display:flex; flex-direction:column; gap:10px; }
+  .saude-card {
+    border-radius:18px; padding:16px;
+    border:1px solid;
+  }
+  .saude-card.rose { background:#e8266a0c; border-color:#e8266a30; }
+  .saude-card.dark { background:var(--card); border-color:var(--border); }
+  .saude-icon { font-size:1.3rem; margin-bottom:8px; }
+  .saude-title { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:600; color:#fff; margin-bottom:8px; }
+  .saude-list { list-style:none; display:flex; flex-direction:column; gap:5px; }
+  .saude-item {
+    display:flex; align-items:flex-start; gap:8px;
+    font-size:0.8rem; color:var(--soft); line-height:1.5;
+  }
+  .saude-bullet { color:var(--pink); flex-shrink:0; margin-top:3px; font-size:0.55rem; }
+  .saude-msg {
+    background:var(--card2); border:1px solid var(--border);
+    border-radius:14px; padding:14px 16px; margin-bottom:10px;
+    font-size:0.82rem; color:var(--soft); line-height:1.6; font-style:italic;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer { text-align:center; padding:2rem 1rem 0.5rem; font-size:0.72rem; color:#2e2e2e; }
+  .page-footer span { color:var(--pink); }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">sua <span>rotina</span></div>
+  <div class="day-badge" id="topDayBadge">—</div>
+</div>
+
+<!-- ══════════════════ PAGE: DIETA ══════════════════ -->
+<div class="page active" id="page-dieta">
+
+  <div class="hero">
+    <div class="nutri-tag"><div class="nutri-dot"></div> Plano nutricional personalizado</div>
+    <h1>Olá, bem-vinda<br>à sua <em>dieta</em> 💕</h1>
+    <div class="hero-msg">
+      Montei esse cardápio pensando no que você gosta e no que faz bem pro seu corpo. Segue com carinho e confia no processo!
+    </div>
+  </div>
+
+  <div class="today-banner" id="dietaTodayBanner">
+    <div class="today-icon" id="dietaTodayIcon">📅</div>
+    <div>
+      <div class="today-label">Hoje é</div>
+      <div class="today-title" id="dietaTodayTitle">—</div>
+      <div class="today-sub" id="dietaTodaySub">Role abaixo e veja o cardápio de hoje</div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <div class="sec-eyebrow">✦ Cardápio semanal</div>
+    <div class="sec-title">Escolha o dia</div>
+  </div>
+
+  <div class="day-scroller" id="dayScroller">
+    <button class="day-pill" data-day="seg" onclick="showDay('seg',this)">Seg</button>
+    <button class="day-pill" data-day="ter" onclick="showDay('ter',this)">Ter</button>
+    <button class="day-pill" data-day="qua" onclick="showDay('qua',this)">Qua</button>
+    <button class="day-pill" data-day="qui" onclick="showDay('qui',this)">Qui</button>
+    <button class="day-pill" data-day="sex" onclick="showDay('sex',this)">Sex</button>
+    <button class="day-pill" data-day="sab" onclick="showDay('sab',this)">Sáb</button>
+    <button class="day-pill" data-day="dom" onclick="showDay('dom',this)">Dom</button>
+  </div>
+
+  <div class="meals-wrap">
+
+    <!-- SEGUNDA -->
+    <div class="day-meals" id="meals-seg">
+      <div class="meal-card">
+        <div class="meal-card-head"><div class="meal-time-badge">07h00 · Café da manhã</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Omelete fácil</div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-bullet">●</div>2 ovos mexidos com brócolis picado (2 min na frigideira antiaderente)</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>1 fatia de pão integral com fio de azeite</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>Suco de beterraba batido com água, sem açúcar</div>
+        </div>
+        <div class="meal-note">💡 Dica: deixa a beterraba cortadinha na geladeira na noite anterior — fica mais rápido de manhã!</div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">10h00 · Lanche</div></div><div class="meal-name-head" style="padding:0 16px 8px">Iogurte com aveia</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Iogurte natural sem açúcar</div><div class="meal-item"><div class="meal-bullet">●</div>1 colher de sopa de aveia em flocos — mistura direto no pote!</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">12h00 · Almoço</div></div><div class="meal-name-head" style="padding:0 16px 8px">Strogonoff de frango 🍗</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Strogonoff feito com iogurte grego no lugar do creme de leite</div><div class="meal-item"><div class="meal-bullet">●</div>Arroz integral</div><div class="meal-item"><div class="meal-bullet">●</div>Salada de alface com azeite e limão</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">15h30 · Lanche tarde</div></div><div class="meal-name-head" style="padding:0 16px 8px">Batata-doce</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>150g de batata-doce cozida em cubos — levar na escolinha numa tigelinha!</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">19h00 · Jantar</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango grelhado simples</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango grelhado com sal, alho e limão</div><div class="meal-item"><div class="meal-bullet">●</div>Brócolis no vapor (5 min no micro-ondas funciona!)</div><div class="meal-item"><div class="meal-bullet">●</div>Batata cozida pequena</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">21h00 · Ceia</div></div><div class="meal-name-head" style="padding:0 16px 8px">Leite morno</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>1 copo de leite morno — toma 30min antes de dormir</div></div></div>
+    </div>
+
+    <!-- TERÇA -->
+    <div class="day-meals" id="meals-ter">
+      <div class="meal-card">
+        <div class="meal-card-head"><div class="meal-time-badge">07h00 · Café da manhã</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Vitamina de banana</div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-bullet">●</div>1 banana + leite desnatado batido no liquidificador</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>1 colher de aveia misturada — sem açúcar</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>1 ovo cozido (deixa cozinhando enquanto se arruma!)</div>
+        </div>
+        <div class="meal-note">💡 Deixa a banana no congelador na noite anterior — fica mais cremoso!</div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">10h00 · Lanche</div></div><div class="meal-name-head" style="padding:0 16px 8px">Amendoim</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>1 punhado de amendoim sem sal — coloca numa sacolinha pra escola</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">12h00 · Almoço</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango assado</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango assado temperado</div><div class="meal-item"><div class="meal-bullet">●</div>Salada de beterraba cozida</div><div class="meal-item"><div class="meal-bullet">●</div>Arroz integral + feijão</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">15h30 · Lanche tarde</div></div><div class="meal-name-head" style="padding:0 16px 8px">Iogurte + fruta</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Iogurte natural</div><div class="meal-item"><div class="meal-bullet">●</div>1 maçã ou pera</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">19h00 · Jantar</div></div><div class="meal-name-head" style="padding:0 16px 8px">Sopa de frango</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Sopa de frango com batata e brócolis</div><div class="meal-item"><div class="meal-bullet">●</div>Quentinha, reconfortante e fácil de fazer!</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">21h00 · Ceia</div></div><div class="meal-name-head" style="padding:0 16px 8px">Chá + torradas</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Chá de camomila</div><div class="meal-item"><div class="meal-bullet">●</div>2 torradas integrais</div></div></div>
+    </div>
+
+    <!-- QUARTA -->
+    <div class="day-meals" id="meals-qua">
+      <div class="meal-card">
+        <div class="meal-card-head"><div class="meal-time-badge">07h00 · Café da manhã</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Tapioca de frango</div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-bullet">●</div>Tapioca feita na frigideira seca com goma de tapioca</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>Recheio: frango desfiado temperado (pode deixar pronto na geladeira)</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>Suco de beterraba sem açúcar</div>
+        </div>
+        <div class="meal-note">💡 A tapioca fica pronta em 3 minutinhos — coloca a goma, espera firmar, dobra e pronto!</div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">10h00 · Lanche</div></div><div class="meal-name-head" style="padding:0 16px 8px">Iogurte grego</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Iogurte grego natural — pode comer puro mesmo!</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">12h00 · Almoço</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango com batata-doce</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango grelhado</div><div class="meal-item"><div class="meal-bullet">●</div>Batata-doce assada no forno (ou micro-ondas)</div><div class="meal-item"><div class="meal-bullet">●</div>Salada de alface com azeite</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">15h30 · Lanche tarde</div></div><div class="meal-name-head" style="padding:0 16px 8px">Castanhas + fruta</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>5 castanhas do pará</div><div class="meal-item"><div class="meal-bullet">●</div>1 fruta da preferência</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">19h00 · Jantar</div></div><div class="meal-name-head" style="padding:0 16px 8px">Strogonoff light</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Strogonoff de frango</div><div class="meal-item"><div class="meal-bullet">●</div>Macarrão integral — porção pequena</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">21h00 · Ceia</div></div><div class="meal-name-head" style="padding:0 16px 8px">Leite morno</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>1 copo de leite morno sem açúcar</div></div></div>
+    </div>
+
+    <!-- QUINTA -->
+    <div class="day-meals" id="meals-qui">
+      <div class="meal-card">
+        <div class="meal-card-head"><div class="meal-time-badge">07h00 · Café da manhã</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Pão integral com ovo</div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-bullet">●</div>1 ovo mexido com sal e azeite — 2 min na frigideira!</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>1 fatia de pão integral</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>Suco de limão com água e adoçante natural</div>
+        </div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">10h00 · Lanche</div></div><div class="meal-name-head" style="padding:0 16px 8px">Iogurte + aveia</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Iogurte natural + 1 col. de aveia</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">12h00 · Almoço</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango desfiado</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango cozido desfiado</div><div class="meal-item"><div class="meal-bullet">●</div>Arroz integral</div><div class="meal-item"><div class="meal-bullet">●</div>Brócolis refogado com alho + alface</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">15h30 · Lanche tarde</div></div><div class="meal-name-head" style="padding:0 16px 8px">Batata-doce + iogurte</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Batata-doce cozida</div><div class="meal-item"><div class="meal-bullet">●</div>Iogurte natural</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">19h00 · Jantar</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango + sopa</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango grelhado</div><div class="meal-item"><div class="meal-bullet">●</div>Sopa leve de legumes</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">21h00 · Ceia</div></div><div class="meal-name-head" style="padding:0 16px 8px">Chá + torrada</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Chá de camomila + 1 torrada integral</div></div></div>
+    </div>
+
+    <!-- SEXTA -->
+    <div class="day-meals" id="meals-sex">
+      <div class="meal-card">
+        <div class="meal-card-head"><div class="meal-time-badge">07h00 · Café da manhã</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Vitamina de frutas</div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-bullet">●</div>Vitamina de frutas com leite — bate no liquidificador!</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>1 colher de aveia — mistura no copo</div>
+        </div>
+        <div class="meal-note">💕 Sexta já, você arrasou na semana!</div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">10h00 · Lanche</div></div><div class="meal-name-head" style="padding:0 16px 8px">Fruta + castanhas</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>1 fruta da preferência</div><div class="meal-item"><div class="meal-bullet">●</div>Punhado de castanhas</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">12h00 · Almoço</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango assado completo</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango assado</div><div class="meal-item"><div class="meal-bullet">●</div>Arroz integral + feijão</div><div class="meal-item"><div class="meal-bullet">●</div>Salada de beterraba</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">15h30 · Lanche tarde</div></div><div class="meal-name-head" style="padding:0 16px 8px">Iogurte grego + fruta</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Iogurte grego natural + 1 fruta</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">19h00 · Jantar</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango + legumes</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango grelhado</div><div class="meal-item"><div class="meal-bullet">●</div>Batata cozida + brócolis no vapor</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">21h00 · Ceia</div></div><div class="meal-name-head" style="padding:0 16px 8px">Leite morno</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>1 copo de leite morno</div></div></div>
+    </div>
+
+    <!-- SÁBADO -->
+    <div class="day-meals" id="meals-sab">
+      <div class="meal-card">
+        <div class="meal-card-head"><div class="meal-time-badge">07h00 · Café da manhã</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Panqueca de aveia 💕</div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-bullet">●</div>Mistura: 1 banana amassada + 1 ovo + 3 col. de aveia</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>Frita em frigideira antiaderente sem óleo — fica uma delícia!</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>Pode comer com um fio de mel ou puro mesmo</div>
+        </div>
+        <div class="meal-note">🎉 Sábado merece um café especial — e você mesma consegue fazer!</div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">10h00 · Lanche</div></div><div class="meal-name-head" style="padding:0 16px 8px">Iogurte com fruta</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Iogurte natural com pedaços de fruta</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">12h00 · Almoço</div></div><div class="meal-name-head" style="padding:0 16px 8px">Strogonoff completo 🍗</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Strogonoff de frango completo</div><div class="meal-item"><div class="meal-bullet">●</div>Arroz integral + salada verde</div></div></div>
+      <div class="meal-card" style="border-color:#e8266a45">
+        <div class="meal-card-head"><div class="meal-time-badge">15h30 · Lanche especial ✨</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Sorvete de banana 🍦</div>
+        <div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Bate banana congelada no liquidificador — vira sorvete cremoso!</div><div class="meal-item"><div class="meal-bullet">●</div>Ou sorvete de fruta sem açúcar adicionado</div></div>
+        <div class="meal-note">💕 Você merece! Sem culpa — é saudável e delicioso.</div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">19h00 · Jantar</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango + legumes assados</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango grelhado</div><div class="meal-item"><div class="meal-bullet">●</div>Mix de legumes assados no forno</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">21h00 · Ceia</div></div><div class="meal-name-head" style="padding:0 16px 8px">Chá leve</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Chá de erva-cidreira ou camomila</div></div></div>
+    </div>
+
+    <!-- DOMINGO -->
+    <div class="day-meals" id="meals-dom">
+      <div class="meal-card">
+        <div class="meal-card-head"><div class="meal-time-badge">07h00 · Café da manhã</div></div>
+        <div class="meal-name-head" style="padding:0 16px 8px">Ovos mexidos com brócolis</div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-bullet">●</div>2 ovos mexidos com brócolis e azeite</div>
+          <div class="meal-item"><div class="meal-bullet">●</div>Suco de beterraba — descansa hoje, você merece!</div>
+        </div>
+        <div class="meal-note">☀️ Domingo é dia de descansar o corpo e também a mente. Cuide bem de você!</div>
+      </div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">10h00 · Lanche</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frutas variadas</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Mix de frutas da preferência — capricha!</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">12h00 · Almoço</div></div><div class="meal-name-head" style="padding:0 16px 8px">Frango assado</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Frango assado</div><div class="meal-item"><div class="meal-bullet">●</div>Batata-doce + feijão + alface</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">15h30 · Lanche tarde</div></div><div class="meal-name-head" style="padding:0 16px 8px">Iogurte + aveia</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Iogurte grego + aveia</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">19h00 · Jantar</div></div><div class="meal-name-head" style="padding:0 16px 8px">Sopa leve</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Sopa de frango com batata e brócolis</div></div></div>
+      <div class="meal-card"><div class="meal-card-head"><div class="meal-time-badge">21h00 · Ceia</div></div><div class="meal-name-head" style="padding:0 16px 8px">Leite morno + torrada</div><div class="meal-body"><div class="meal-item"><div class="meal-bullet">●</div>Leite morno + 1 torrada integral</div></div></div>
+    </div>
+
+  </div><!-- /meals-wrap -->
+
+  <div class="nutri-tip" style="margin:16px 18px 0">
+    <div class="tip-icon">🌸</div>
+    <div class="tip-text">Lembre de beber água ao longo do dia! Pelo menos 2 litros. Deixa uma garrafinha sempre por perto.</div>
+  </div>
+
+  <div class="page-footer">feito com <span>♥</span> pela sua nutri — cuide-se!</div>
+</div>
+
+<!-- ══════════════════ PAGE: ACADEMIA ══════════════════ -->
+<div class="page" id="page-academia">
+  <div style="padding:24px 0 0">
+    <div class="sec-head">
+      <div class="sec-eyebrow">✦ Treinos da semana</div>
+      <div class="sec-title">Sua Academia</div>
+    </div>
+  </div>
+
+  <div class="treino-wrap">
+
+    <div class="treino-card">
+      <div class="treino-head">
+        <div><div class="treino-day">Segunda-feira</div><div class="treino-title">Pernas e Glúteos</div></div>
+        <div class="treino-tag tag-gym">Academia</div>
+      </div>
+      <ul class="exercise-list">
+        <li class="exercise-item"><span class="ex-name">Agachamento livre</span><span class="ex-sets">3 × 15</span></li>
+        <li class="exercise-item"><span class="ex-name">Leg press 45°</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Cadeira extensora</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Cadeira flexora</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Panturrilha no step</span><span class="ex-sets">3 × 20</span></li>
+        <li class="exercise-item"><span class="ex-name">Prancha abdominal</span><span class="ex-sets">3 × 30s</span></li>
+      </ul>
+    </div>
+
+    <div class="treino-card">
+      <div class="treino-head">
+        <div><div class="treino-day">Terça-feira</div><div class="treino-title">Força em Casa 🏠</div></div>
+        <div class="treino-tag tag-home">Em casa</div>
+      </div>
+      <ul class="exercise-list">
+        <li class="exercise-item"><span class="ex-name">Agachamento livre sem peso</span><span class="ex-sets">4 × 20</span></li>
+        <li class="exercise-item"><span class="ex-name">Avanço alternado</span><span class="ex-sets">3 × 12 cada</span></li>
+        <li class="exercise-item"><span class="ex-name">Elevação pélvica no chão</span><span class="ex-sets">4 × 15</span></li>
+        <li class="exercise-item"><span class="ex-name">Flexão de joelho (afundo)</span><span class="ex-sets">3 × 10</span></li>
+        <li class="exercise-item"><span class="ex-name">Prancha frontal</span><span class="ex-sets">3 × 30s</span></li>
+        <li class="exercise-item"><span class="ex-name">Abdominal bicicleta</span><span class="ex-sets">3 × 20</span></li>
+      </ul>
+      <div class="treino-msg">Sem desculpa — dá pra fazer no quarto mesmo! Coloca uma música boa 🎵</div>
+    </div>
+
+    <div class="treino-card">
+      <div class="treino-head">
+        <div><div class="treino-day">Quarta-feira</div><div class="treino-title">Peito, Costas e Ombros</div></div>
+        <div class="treino-tag tag-gym">Academia</div>
+      </div>
+      <ul class="exercise-list">
+        <li class="exercise-item"><span class="ex-name">Supino com halteres</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Remada baixa cabo</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Pulldown / Puxada alta</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Desenvolvimento halteres</span><span class="ex-sets">3 × 10</span></li>
+        <li class="exercise-item"><span class="ex-name">Crucifixo halteres</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Abdominal crunch</span><span class="ex-sets">3 × 15</span></li>
+      </ul>
+    </div>
+
+    <div class="treino-card">
+      <div class="treino-head">
+        <div><div class="treino-day">Quinta-feira</div><div class="treino-title">Cardio e Core em Casa 🏠</div></div>
+        <div class="treino-tag tag-home">Em casa</div>
+      </div>
+      <ul class="exercise-list">
+        <li class="exercise-item"><span class="ex-name">Polichinelo</span><span class="ex-sets">3 × 1min</span></li>
+        <li class="exercise-item"><span class="ex-name">Agachamento com salto</span><span class="ex-sets">3 × 10</span></li>
+        <li class="exercise-item"><span class="ex-name">Corrida no lugar</span><span class="ex-sets">3 × 45s</span></li>
+        <li class="exercise-item"><span class="ex-name">Prancha lateral</span><span class="ex-sets">3 × 20s cada</span></li>
+        <li class="exercise-item"><span class="ex-name">Abdominal infra</span><span class="ex-sets">3 × 15</span></li>
+        <li class="exercise-item"><span class="ex-name">Alongamento guiado</span><span class="ex-sets">10 min</span></li>
+      </ul>
+      <div class="treino-msg">Coloca uma playlist animada e vai! Você não precisa nem sair de casa hoje 🎶</div>
+    </div>
+
+    <div class="treino-card">
+      <div class="treino-head">
+        <div><div class="treino-day">Sexta-feira</div><div class="treino-title">Braços e Ombros</div></div>
+        <div class="treino-tag tag-gym">Academia</div>
+      </div>
+      <ul class="exercise-list">
+        <li class="exercise-item"><span class="ex-name">Rosca direta halteres</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Rosca martelo</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Tríceps corda</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Tríceps francês</span><span class="ex-sets">3 × 12</span></li>
+        <li class="exercise-item"><span class="ex-name">Encolhimento de ombros</span><span class="ex-sets">3 × 15</span></li>
+        <li class="exercise-item"><span class="ex-name">Abdominal bicicleta</span><span class="ex-sets">3 × 15</span></li>
+      </ul>
+    </div>
+
+    <div class="treino-card">
+      <div class="treino-head">
+        <div><div class="treino-day">Sábado</div><div class="treino-title">Movimentação Livre 🏠</div></div>
+        <div class="treino-tag tag-home">Em casa</div>
+      </div>
+      <ul class="exercise-list">
+        <li class="exercise-item"><span class="ex-name">Dança livre — coloca a música fav</span><span class="ex-sets">20 min</span></li>
+        <li class="exercise-item"><span class="ex-name">Caminhada no bairro</span><span class="ex-sets">20–30 min</span></li>
+        <li class="exercise-item"><span class="ex-name">Alongamento completo no chão</span><span class="ex-sets">15 min</span></li>
+      </ul>
+      <div class="treino-msg">Sábado é pra relaxar e se mover com leveza. Vale dançar na sala, passear, o que sentir vontade 💕</div>
+    </div>
+
+    <div class="treino-card" style="border-color:#a0e8b040">
+      <div class="treino-head">
+        <div><div class="treino-day">Domingo</div><div class="treino-title">Descanso Total 💚</div></div>
+        <div class="treino-tag tag-rest">Descanso</div>
+      </div>
+      <ul class="exercise-list">
+        <li class="exercise-item"><span class="ex-name">Descanso — corpo e mente</span><span class="ex-sets">✓</span></li>
+        <li class="exercise-item"><span class="ex-name">Hidratação reforçada</span><span class="ex-sets">2L+</span></li>
+        <li class="exercise-item"><span class="ex-name">Alongamento suave se quiser</span><span class="ex-sets">opcional</span></li>
+      </ul>
+      <div class="treino-msg">Descanso faz parte do treino! É hoje que o corpo recupera e fica mais forte. Aproveita o domingo ☀️</div>
+    </div>
+
+  </div>
+  <div class="page-footer">feito com <span>♥</span> pela sua nutri — cuide-se!</div>
+</div>
+
+<!-- ══════════════════ PAGE: ROTINA ══════════════════ -->
+<div class="page" id="page-rotina">
+  <div style="padding:24px 0 0">
+    <div class="sec-head">
+      <div class="sec-eyebrow">✦ Organização</div>
+      <div class="sec-title">Sua Rotina Diária</div>
+    </div>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="tl-section-label">Dias de semana — Segunda a Sexta</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot" id="dot-630"></div><div class="tl-time">06h30</div><div class="tl-label">Acordar</div><div class="tl-detail">Tomar remédio se necessário — sempre com comidinha leve</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-700"></div><div class="tl-time">07h00</div><div class="tl-label">Café da manhã</div><div class="tl-detail">Refeição completa — o mais importante do dia!</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-1000"></div><div class="tl-time">10h00</div><div class="tl-label">Lanche da manhã</div><div class="tl-detail">Em casa ou já guardado na mochila pra escola</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-1200"></div><div class="tl-time">12h00</div><div class="tl-label">Almoço</div><div class="tl-detail">Antes de sair pra escola — não sai sem almoçar!</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-1250"></div><div class="tl-time">12h50</div><div class="tl-label">Escola 🏫</div><div class="tl-detail">Entrada — lanche na mochila pra tarde</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-1530"></div><div class="tl-time">15h30</div><div class="tl-label">Lanche da tarde</div><div class="tl-detail">Na escola — nunca fica de barriga vazia!</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-1800"></div><div class="tl-time">18h00</div><div class="tl-label">Saída da escola 🏃‍♀️</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-1900"></div><div class="tl-time">19h00</div><div class="tl-label">Jantar</div><div class="tl-detail">Refeição tranquila em casa</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-2100"></div><div class="tl-time">21h00</div><div class="tl-label">Ceia leve</div><div class="tl-detail">30–40min antes do remédio pra dormir</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-2130"></div><div class="tl-time">21h30</div><div class="tl-label">Remédio pra dormir</div><div class="tl-detail">Horário fixo — ajuda o corpo a regular</div></div>
+      <div class="tl-item"><div class="tl-dot" id="dot-2200"></div><div class="tl-time">22h00</div><div class="tl-label">Dormir 💕</div><div class="tl-detail">Sono de qualidade faz parte da saúde!</div></div>
+    </div>
+
+    <div class="tl-section-label">Horário da academia</div>
+    <div class="horario-card"><div class="hc-label">Opção A — Manhã</div><div class="hc-val">Academia às <strong>08h00–09h30</strong><br>Treina antes da escola, depois vai mais disposta!</div></div>
+    <div class="horario-card"><div class="hc-label">Opção B — Noite</div><div class="hc-val">Academia às <strong>18h30–19h30</strong><br>Chega da escola, descansa uns minutinhos e vai treinar</div></div>
+
+    <div class="saude-card rose" style="margin-top:4px">
+      <div style="font-size:0.82rem;color:#e8a0bc;line-height:1.7">
+        💡 <strong style="color:#fff">Dica de ouro:</strong> sempre guarda um lanchinho na mochila — amendoim, castanha ou fruta. Se sentir tontura ou fraqueza, come na hora. Sua saúde primeiro!
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">feito com <span>♥</span> pela sua nutri — cuide-se!</div>
+</div>
+
+<!-- ══════════════════ PAGE: SAÚDE ══════════════════ -->
+<div class="page" id="page-saude">
+  <div style="padding:24px 0 0">
+    <div class="sec-head">
+      <div class="sec-eyebrow">✦ Cuidados especiais</div>
+      <div class="sec-title">Sua Saúde</div>
+    </div>
+  </div>
+
+  <div class="saude-msg" style="margin:0 18px 10px">
+    🌸 Montei esse plano pensando em cada detalhe da sua saúde. Lê com atenção e sempre que tiver dúvida, me chama!
+  </div>
+
+  <div class="saude-wrap">
+    <div class="saude-card rose">
+      <div class="saude-icon">🩸</div>
+      <div class="saude-title">Pré-diabética — atenção aqui!</div>
+      <ul class="saude-list">
+        <li class="saude-item"><div class="saude-bullet">●</div>Nunca pular refeição — isso é muito importante pra você</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Evitar açúcar refinado, refrigerante e suco industrializado</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Batata-doce tem menos açúcar que a batata comum — prefira ela!</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Sempre juntar carboidrato + proteína na mesma refeição</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Sorvete? Só o de fruta caseiro — e você já sabe fazer! 🍦</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Se sentir tontura ou fraqueza, come algo imediatamente</li>
+      </ul>
+    </div>
+
+    <div class="saude-card dark">
+      <div class="saude-icon">💊</div>
+      <div class="saude-title">Remédio pra dormir</div>
+      <ul class="saude-list">
+        <li class="saude-item"><div class="saude-bullet">●</div>Toma sempre com a ceia — nunca de estômago vazio</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Horário fixo às 21h30 — isso regula o sono naturalmente</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Evita tela de celular 30min antes de dormir se possível</li>
+      </ul>
+    </div>
+
+    <div class="saude-card dark">
+      <div class="saude-icon">🧠</div>
+      <div class="saude-title">Antidepressivo</div>
+      <ul class="saude-list">
+        <li class="saude-item"><div class="saude-bullet">●</div>Siga exatamente o que seu médico orientou</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Nunca para por conta própria — é importante continuar</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Fale sempre com quem você confia se não estiver bem</li>
+      </ul>
+    </div>
+
+    <div class="saude-card dark">
+      <div class="saude-icon">🏋️</div>
+      <div class="saude-title">Na academia</div>
+      <ul class="saude-list">
+        <li class="saude-item"><div class="saude-bullet">●</div>Pesos leves e moderados — você tem 13 anos, sem pressa!</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Sempre com supervisão de um profissional presente</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Sentiu tontura? Para, senta e come algo imediatamente</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Leva lanchinho sempre — amendoim ou fruta na mochila</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Água antes, durante e depois — sempre!</li>
+      </ul>
+    </div>
+
+    <div class="saude-card dark">
+      <div class="saude-icon">💧</div>
+      <div class="saude-title">Hidratação</div>
+      <ul class="saude-list">
+        <li class="saude-item"><div class="saude-bullet">●</div>Mínimo 2 litros de água por dia</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Chás sem açúcar contam!</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Deixa uma garrafinha sempre do lado</li>
+      </ul>
+    </div>
+
+    <div class="saude-card rose">
+      <div class="saude-icon">✅</div>
+      <div class="saude-title">O que você ama e pode comer 💕</div>
+      <ul class="saude-list">
+        <li class="saude-item"><div class="saude-bullet">●</div>Sorvete de banana congelada — faça em casa!</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Strogonoff de frango — versão com iogurte grego</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Beterraba, alface, brócolis, frango, batata-doce</li>
+        <li class="saude-item"><div class="saude-bullet">●</div>Tudo isso faz parte do plano — sem restrição!</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer">feito com <span>♥</span> pela sua nutri — cuide-se!</div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bnav-btn active" onclick="showPage('dieta',this)">
+    <span class="bnav-icon">🥗</span>
+    <span class="bnav-label">Dieta</span>
+    <div class="bnav-dot"></div>
+  </button>
+  <button class="bnav-btn" onclick="showPage('academia',this)">
+    <span class="bnav-icon">🏋️</span>
+    <span class="bnav-label">Academia</span>
+    <div class="bnav-dot"></div>
+  </button>
+  <button class="bnav-btn" onclick="showPage('rotina',this)">
+    <span class="bnav-icon">📅</span>
+    <span class="bnav-label">Rotina</span>
+    <div class="bnav-dot"></div>
+  </button>
+  <button class="bnav-btn" onclick="showPage('saude',this)">
+    <span class="bnav-icon">💊</span>
+    <span class="bnav-label">Saúde</span>
+    <div class="bnav-dot"></div>
+  </button>
+</nav>
+
+<script>
+const DAY_MAP = { 0:'dom', 1:'seg', 2:'ter', 3:'qua', 4:'qui', 5:'sex', 6:'sab' };
+const DAY_NAMES = { seg:'Segunda-feira', ter:'Terça-feira', qua:'Quarta-feira', qui:'Quinta-feira', sex:'Sexta-feira', sab:'Sábado', dom:'Domingo' };
+const DAY_ICONS = { seg:'💪', ter:'🥗', qua:'⚡', qui:'🔥', sex:'✨', sab:'🎉', dom:'☀️' };
+const DAY_SUBS = { seg:'Começo de semana forte!', ter:'Tá indo bem, continua!', qua:'Metade da semana — você consegue!', qui:'Quase lá, bora!', sex:'Último dia de escola! Arrasou!', sab:'Sábado de cuidar de você 💕', dom:'Descansa e recarrega as energias' };
+
+function init() {
+  const jsDay = new Date().getDay();
+  const todayKey = DAY_MAP[jsDay];
+
+  // Top badge
+  document.getElementById('topDayBadge').textContent = DAY_NAMES[todayKey];
+
+  // Today banner
+  document.getElementById('dietaTodayIcon').textContent = DAY_ICONS[todayKey];
+  document.getElementById('dietaTodayTitle').textContent = DAY_NAMES[todayKey];
+  document.getElementById('dietaTodaySub').textContent = DAY_SUBS[todayKey];
+
+  // Mark today pill
+  document.querySelectorAll('.day-pill').forEach(btn => {
+    if (btn.dataset.day === todayKey) {
+      btn.classList.add('today-pill');
+      const dot = document.createElement('div');
+      dot.className = 'today-marker';
+      btn.appendChild(dot);
+    }
+  });
+
+  // Auto-open today's meals
+  activateDay(todayKey);
+
+  // Scroll today pill into view
+  setTimeout(() => {
+    const todayPill = document.querySelector(`.day-pill[data-day="${todayKey}"]`);
+    if (todayPill) todayPill.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  }, 300);
+}
+
+function activateDay(day) {
+  document.querySelectorAll('.day-meals').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.day-pill').forEach(b => b.classList.remove('active'));
+  const mealsEl = document.getElementById('meals-' + day);
+  if (mealsEl) mealsEl.classList.add('active');
+  const pillEl = document.querySelector(`.day-pill[data-day="${day}"]`);
+  if (pillEl) pillEl.classList.add('active');
+}
+
+function showDay(day, btn) {
+  activateDay(day);
+}
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+init();
+</script>
+</body>
+</html>
